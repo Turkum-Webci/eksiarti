@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksi-Artı Uygulaması (v0.1)</title>
+    <style>
+        body{
+            background-color: gray;
+        }
+        #kont1{
+            background-color: black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 0 white;
+        }
+        .buton{
+            background-color: azure;
+            border: 1px solid rgb(77, 77, 77);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: monospace;
+            margin-right: 0px;
+        }
+        .buton:focus{
+            background-color: rgb(0, 255, 255);
+        }
+        .alan{
+            display: none;
+            background-color: black;
+            border: 3px solid white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="kont1">
+        <center>
+        <button class="buton" onclick="A()">Öğrenci Ekle</button>
+        <button class="buton" onclick="B()">Eksi-Artı At</button>
+        <button class="buton" onclick="C()">Öğrenciye bak</button>
+        <button class="buton" onclick="D()">Not yaz</button>
+        </center>
+    </div>
+    <div id="ogrekle" class="alan">
+        <center><h2 style="font-family: monospace;color: aliceblue;">Öğrenci Ekle</h2></center>
+        <hr>
+        <center>
+        <input type="text" placeholder="Öğrenci Adı" id="ogradiekle">
+        <button class="buton" onclick="EKLE()">Ekle</button>
+        </center>
+    </div>
+    <div id="ogreksi" class="alan">
+        <center><h2 style="font-family: monospace;color: aliceblue;">Eksi-Artı at</h2></center>
+        <input type="text" id="ograd" placeholder="Öğrenci Adı"> <br>
+        <select name="" id="neden">
+            <option value="baska">Başka Neden</option>
+            <option value="derskatil">Derse Katıldı (artı)</option>
+            <option value="sorubil">Bir soruyu bildi (artı)</option>
+            <option value="sinifici">Sınıf içinde iyi (artı)</option>
+            <option value="odev">Ödevini yaptı-Yapmadı (artıda ekside)</option>
+            <option value="saygi">Saygı nedeniyle (artıda ekside)</option>
+            <option value="sinifkonus">Sınıfta Konuştu (eksi)</option>
+            <option value="dersakis">Dersin akışını bozdu. (eksi)</option>
+        </select> <br>
+        <button onclick="AR()">Artı At +</button> <br>
+        <button onclick="EK()">Eksi At -</button>
+    </div>
+    <div id="ogrbak" class="alan">
+        <center><h2 style="font-family: monospace;color: aliceblue;">Öğrenciye Bak</h2></center>
+        <div id="ogrlis2" style="color: white;"></div>
+    </div>
+    <div id="not" class="alan">
+        <center><h2 style="font-family: monospace;color: aliceblue;">Not</h2></center>
+        <textarea name="" id="noty" style="width: 100%;height: 400px;resize:none;"></textarea>
+    </div>
+    <script>
+        var kytveri = localStorage.getItem("veri");
+        var veri = kytveri ? JSON.parse(kytveri) : {"ogrenciler":{}};
+        setInterval(function(){
+localStorage.setItem("veri", JSON.stringify(veri));
+        }, 12);
+        function TMZ(){
+            document.getElementById("ogrekle").style.display = "none";
+            document.getElementById("ogreksi").style.display = "none";
+            document.getElementById("ogrbak").style.display = "none";
+            document.getElementById("not").style.display = "none";
+        }
+        function AC(alan){
+            document.getElementById(alan).style.display = "block";
+        }
+        function dgr(eksi, saygi, sinifici, katilim, basari){
+            var mtn = "";
+            if(eksi > 10){
+mtn += "Öğrenci çok yaramaz. ";
+            }
+            else if(eksi > 7){
+mtn += "Öğrenci yaramaz. ";
+            }
+            else if(eksi > 3){
+mtn += "Öğrenci ortalama yaramazlıkta. ";
+            }
+            else if(eksi <= 3){
+mtn += "Öğrenci uslu. ";
+            }
+            if(saygi > 10){
+mtn += "Öğrenci oldukça saygılı. ";
+            }
+            else if(saygi > 7){
+mtn += "Öğrenci saygılı. ";
+            }
+            else if(saygi > 3){
+mtn += "Öğrenci ortalama saygılı. ";
+            }
+            else if(saygi <= 3){
+mtn += "Öğrenci saygısız. ";
+            }
+            if(sinifici > 10){
+mtn += "Öğrenci sınıf içinde oldukça iyi. ";
+            }
+            else if(sinifici > 7){
+mtn += "Öğrenci sınıf içinde iyi. ";
+            }
+            else if(sinifici > 3){
+mtn += "Öğrenci sınıf içinde ortalama. ";
+            }
+            else if(sinifici <= 3){
+mtn += "Öğrenci sınıf içinde başarısız. ";
+            }
+            if(katilim > 10){
+mtn += "Öğrencinin derse katılımı oldukça iyi. ";
+            }
+            else if(katilim > 7){
+mtn += "Öğrencinin derse katılımı iyi. ";
+            }
+            else if(katilim > 3){
+mtn += "Öğrencinin derse katılımı ortalama. ";
+            }
+            else if(katilim <= 3){
+mtn += "Öğrencinin derse katılımı kötü. ";
+            }
+            if(basari > 10){
+mtn += "Öğrenci oldukça başarılı. ";
+            }
+            else if(basari > 7){
+mtn += "Öğrenci başarılı. ";
+            }
+            else if(basari > 3){
+mtn += "Öğrenci ortalama başarılı. ";
+            }
+            else if(basari <= 3){
+mtn += "Öğrenci başarısız. ";
+            }
+            return mtn;
+        }
+        function LISTE(){
+            var lisal = document.getElementById("ogrlis2");
+            lisal.innerHTML = "";
+            var ogrlar = Object.keys(veri.ogrenciler);
+            var html = "<ul>";
+            ogrlar.forEach(function(isim){
+                var ogr = veri.ogrenciler[isim];
+                var deger = dgr(ogr.eksi, ogr.saygi, ogr.sinifici, ogr.katilim, ogr.basari)
+                html += `<li>${isim} → Artı: ${ogr.arti}, Eksi: ${ogr.eksi} <br> ${isim} adlı öğrenci için Değerlendirme: ${deger}</li>`;
+            });
+            html += "</ul>";
+            lisal.innerHTML = html;
+        }
+        function A(){TMZ();AC("ogrekle")}
+        function B(){TMZ();AC("ogreksi")}
+        function C(){TMZ();AC("ogrbak");LISTE();}
+        function D(){TMZ();AC("not")}
+        function EKLE(){
+            var isim = document.getElementById("ogradiekle").value.trim();
+            if(!veri.ogrenciler[isim]){
+                veri.ogrenciler[isim] = {arti: 0, eksi:0, saygi: 5, sinifici: 5, katilim: 5, basari: 5};
+                alert(isim + " Adlı öğrenci eklendi.");
+            }
+        }
+        function AR(){
+            var neden = document.getElementById("neden").value;
+            var isim = document.getElementById("ograd").value;
+            veri.ogrenciler[isim].arti += 1;
+            if(neden == "derskatil"){
+                veri.ogrenciler[isim].basari += 0.5;
+                veri.ogrenciler[isim].katilim += 1;
+                veri.ogrenciler[isim].sinifici += 0.25;
+            }
+            else if(neden == "sorubil"){
+                veri.ogrenciler[isim].basari += 1;
+                veri.ogrenciler[isim].katilim += 0.5;
+                veri.ogrenciler[isim].sinifici += 0.25;
+            }
+            else if(neden == "sinifici"){
+                veri.ogrenciler[isim].sinifici += 1;
+            }
+            else if(neden == "saygi"){
+                veri.ogrenciler[isim].saygi += 1;
+            }
+            else if(neden == "odev"){
+                veri.ogrenciler[isim].basari += 0.5;
+            }
+        }
+        function EK(){
+            var neden = document.getElementById("neden").value;
+            var isim = document.getElementById("ograd").value;
+            veri.ogrenciler[isim].eksi += 1;
+            if(neden == "saygi"){
+                veri.ogrenciler[isim].saygi -= 1;
+            }
+            else if(neden == "odev"){
+                veri.ogrenciler[isim].basari -= 0.5;
+            }
+            else if(neden == "sinifkonus"){
+                veri.ogrenciler[isim].sinifici -= 1;
+            }
+            else if(neden == "dersakis"){
+                veri.ogrenciler[isim].sinifici -= 1.5;
+                veri.ogrenciler[isim].katilim -= 0.5;
+            }
+        }
+    </script>
+</body>
+</html>

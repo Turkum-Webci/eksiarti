@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eksi-Artı Uygulaması (v0.15)</title>
+    <title>Eksi-Artı Uygulaması (v0.2)</title>
     <style>
         body{
             background-color: gray;
@@ -31,6 +31,19 @@
             border: 3px solid white;
             border-radius: 5px;
         }
+        #ograd{
+            background-color: gray;
+            color: white;
+            font-family: monospace;
+            border: 3px solid white;
+            box-shadow: 3px 3px 0 gray;
+            cursor: pointer;
+        }
+        #ograd *{
+            background-color: rgb(160, 160, 160);
+            color: white;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -40,6 +53,7 @@
         <button class="buton" onclick="B()">Eksi-Artı At</button>
         <button class="buton" onclick="C()">Öğrenciye bak</button>
         <button class="buton" onclick="D()">Not yaz</button>
+        <button class="buton" onclick="E()">Kara Liste</button>
         </center>
     </div>
     <div id="ogrekle" class="alan">
@@ -52,7 +66,7 @@
     </div>
     <div id="ogreksi" class="alan">
         <center><h2 style="font-family: monospace;color: aliceblue;">Eksi-Artı at</h2></center>
-        <input type="text" id="ograd" placeholder="Öğrenci Adı"> <br>
+        <select id="ograd"></select> <br>
         <select name="" id="neden">
             <option value="baska">Başka Neden</option>
             <option value="derskatil">Derse Katıldı (artı)</option>
@@ -76,7 +90,11 @@
     </div>
     <div id="not" class="alan">
         <center><h2 style="font-family: monospace;color: aliceblue;">Not</h2></center>
-        <div id="noty" style="width: 100%;height: 400px;background-color:white;font-family: monospace;" contenteditable="true"></div>
+        <div id="noty" style="width: 100%;height: 400px;background-color:white;font-family: monospace;overflow-y: auto;" contenteditable="true"></div>
+    </div>
+    <div id="karaliste" class="alan" style="background-color: white;">
+        <center><h2 style="font-family: monospace;color: black;">Kara Liste</h2></center>
+        <div id="noty2" style="width: 100%;height: 400px;background-color:black;font-family: monospace;color: white;border: 5px solid white;font-size: 20px;overflow-y: auto;" contenteditable="true"></div>
     </div>
     <script>
         var sonnedene, sonnedena;
@@ -85,13 +103,16 @@
         setInterval(function(){
 localStorage.setItem("veri", JSON.stringify(veri));
 localStorage.setItem("not", document.getElementById("noty").innerHTML);
+localStorage.setItem("not2", document.getElementById("noty2").innerHTML);
         }, 60);
         document.getElementById("noty").innerHTML = localStorage.getItem("not");
+        document.getElementById("noty2").innerHTML = localStorage.getItem("not2");
         function TMZ(){
             document.getElementById("ogrekle").style.display = "none";
             document.getElementById("ogreksi").style.display = "none";
             document.getElementById("ogrbak").style.display = "none";
             document.getElementById("not").style.display = "none";
+            document.getElementById("karaliste").style.display = "none";
         }
         function AC(alan){
             document.getElementById(alan).style.display = "block";
@@ -199,10 +220,21 @@ mtn += "Öğrenci ödevlerini yapmıyor. ";
             html += "</ul>";
             lisal.innerHTML = html;
         }
-        function A(){TMZ();AC("ogrekle")}
-        function B(){TMZ();AC("ogreksi")}
+        function LISTEOL(){
+            var lisal = document.getElementById("ograd");
+            lisal.innerHTML = "";
+            var ogrlar = Object.keys(veri.ogrenciler);
+            var html = "";
+            ogrlar.forEach(function(isim){
+                html += `<option value="${isim}">${isim}</option>`;
+            });
+            lisal.innerHTML = html;
+        }
+        function A(){TMZ();AC("ogrekle");}
+        function B(){TMZ();AC("ogreksi");LISTEOL();}
         function C(){TMZ();AC("ogrbak");LISTE();}
-        function D(){TMZ();AC("not")}
+        function D(){TMZ();AC("not");}
+        function E(){TMZ();AC("karaliste");}
         function EKLE(){
             var isim = document.getElementById("ogradiekle").value.trim();
             if(!veri.ogrenciler[isim]){
